@@ -22,15 +22,15 @@ class MyPlugin(Star):
         # self._monitoring_task = asyncio.create_task(self._auto_task())
         logger.info("兔兔直播提醒已加载")
     
-    @filter.command("直播状态")            
+    @filter.command("直播了么")            
     async def tutulived(self, event: AstrMessageEvent):
         """
         命令获取 直播状态
         通过发送“直播状态”命令，获取当前的直播状态
         """
-        # news_content = await self._getlived()
-        # yield event.plain_result(news_content)
-        await self._send_to_groups()
+        news_content = await self._getlived()
+        yield event.plain_result(news_content)
+        # await self._send_to_groups()
 
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
 
@@ -52,9 +52,10 @@ class MyPlugin(Star):
         """获取直播状态"""
         client = UapiClient("https://uapis.cn")
         try:
-            result = client.social.get_social_bilibili_liveroom(mid="12557622", room_id="6411294")
+            data = client.social.get_social_bilibili_liveroom(mid="", room_id="6411294")
             # print(result)
-            result = self.live_status(result[live_status])
+            # result = self.live_status(result[live_status])
+            result = f"🔴兔兔正在直播中,开始时间：{data['live_time']}" if data['live_status'] == 1 else "⚫兔兔未开播"
         except UapiError as exc:
             result = (f"API error: {exc}")
         return result
@@ -67,9 +68,8 @@ class MyPlugin(Star):
         result = await self._getlived()
         for target in self.config.groups:
             try:
-                message_chain = MessageChain().message(result)
-                
-                logger.info(f"直播状态: {result}...")
+                message_chain = MessageChain().message(result) 
+                logger.info(f"{result}")
                 await self.context.send_message(target, message_chain)
                 logger.info(f"已向{target}推送。")
                 await asyncio.sleep(2)  # 防止推送过快
