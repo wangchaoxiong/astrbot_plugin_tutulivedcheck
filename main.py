@@ -12,12 +12,12 @@ from astrbot.core.message.message_event_result import MessageChain
 
 @register("tutulivedcheck", "xiaohuangshu", "兔兔直播监听插件", "1.0.0")
 class MyPlugin(Star):
-    def __init__(self, context: Context,config: AstrBotConfig):
+    def __init__(self, context: Context):
         super().__init__(context)
-        self.config = config
-        self.push_time = self.config.push_time
-        self.push_way = self.config.push_way
-        logger.info(f"插件配置: {self.config}")
+        # self.config = config
+        # self.push_time = self.config.push_time
+        # self.push_way = self.config.push_way
+        # logger.info(f"插件配置: {self.config}")
         # 启动定时任务
         # self._monitoring_task = asyncio.create_task(self._auto_task())
         logger.info("兔兔直播提醒已加载")
@@ -30,7 +30,10 @@ class MyPlugin(Star):
         """
         # news_content = await self._getlived()
         # yield event.plain_result(news_content)
-        await self._send_to_groups()
+        # await self._send_to_groups()
+        message_chain = self._getlived()
+        logger.info(f"直播状态: {message_chain}...")
+        await self.context.send_message('740103453', message_chain)
 
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
 
@@ -60,25 +63,25 @@ class MyPlugin(Star):
         return result
     
     
-    async def _send_to_groups(self):
-        """
-        推送目标群组
-        """
-        result = await self._getlived()
-        for target in self.config.groups:
-            try:
-                message_chain = MessageChain().message(result)
+    # async def _send_to_groups(self):
+    #     """
+    #     推送目标群组
+    #     """
+    #     result = await self._getlived()
+    #     for target in self.config.groups:
+    #         try:
+    #             message_chain = MessageChain().message(result)
                 
-                logger.info(f"直播状态: {result}...")
-                await self.context.send_message(target, message_chain)
-                logger.info(f"已向{target}推送。")
-                await asyncio.sleep(2)  # 防止推送过快
-            except Exception as e:
-                error_message = str(e) if str(e) else "未知错误"
-                logger.error(f"推送失败: {error_message}")
-                # 可选：记录堆栈跟踪信息
-                logger.exception("详细错误信息：")
-                await asyncio.sleep(2)  # 防止推送过快
+    #             logger.info(f"直播状态: {result}...")
+    #             await self.context.send_message(target, message_chain)
+    #             logger.info(f"已向{target}推送。")
+    #             await asyncio.sleep(2)  # 防止推送过快
+    #         except Exception as e:
+    #             error_message = str(e) if str(e) else "未知错误"
+    #             logger.error(f"推送失败: {error_message}")
+    #             # 可选：记录堆栈跟踪信息
+    #             logger.exception("详细错误信息：")
+    #             await asyncio.sleep(2)  # 防止推送过快
 
     def live_status(self):
         """使用 if-elif-else 实现 switch"""
