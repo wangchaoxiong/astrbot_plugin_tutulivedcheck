@@ -14,10 +14,10 @@ from astrbot.core.message.message_event_result import MessageChain
 class MyPlugin(Star):
     def __init__(self, context: Context,config: AstrBotConfig):
         super().__init__(context)
-        # self.config = config
-        # self.push_time = self.config.push_time
-        # self.push_way = self.config.push_way
-        # logger.info(f"插件配置: {self.config}")
+        self.config = config
+        self.push_time = self.config.push_time
+        self.push_way = self.config.push_way
+        logger.info(f"插件配置: {self.config}")
         # 启动定时任务
         # self._monitoring_task = asyncio.create_task(self._auto_task())
         logger.info("兔兔直播提醒已加载")
