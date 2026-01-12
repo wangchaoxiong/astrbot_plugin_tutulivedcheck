@@ -14,10 +14,10 @@ from astrbot.core.message.message_event_result import MessageChain
 class MyPlugin(Star):
     def __init__(self, context: Context,config: AstrBotConfig):
         super().__init__(context)
-        self.config = config
-        self.push_time = self.config.push_time
-        self.push_way = self.config.push_way
-        logger.info(f"插件配置: {self.config}")
+        # self.config = config
+        # self.push_time = self.config.push_time
+        # self.push_way = self.config.push_way
+        # logger.info(f"插件配置: {self.config}")
         # 启动定时任务
         # self._monitoring_task = asyncio.create_task(self._auto_task())
         logger.info("兔兔直播提醒已加载")
@@ -28,8 +28,9 @@ class MyPlugin(Star):
         命令获取 直播状态
         通过发送“直播状态”命令，获取当前的直播状态
         """
-        news_content = await self._getlived()
-        yield event.plain_result(news_content)
+        # news_content = await self._getlived()
+        # yield event.plain_result(news_content)
+        await self._send_to_groups()
 
         """可选择实现异步的插件初始化方法，当实例化该插件类之后会自动调用该方法。"""
 
@@ -74,7 +75,7 @@ class MyPlugin(Star):
                 await asyncio.sleep(2)  # 防止推送过快
             except Exception as e:
                 error_message = str(e) if str(e) else "未知错误"
-                logger.error(f"[epic] 推送Epic免费游戏失败: {error_message}")
+                logger.error(f"推送失败: {error_message}")
                 # 可选：记录堆栈跟踪信息
                 logger.exception("详细错误信息：")
                 await asyncio.sleep(2)  # 防止推送过快
