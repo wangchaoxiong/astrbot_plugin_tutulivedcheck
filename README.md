@@ -1,8 +1,6 @@
-# helloworld
+# up直播提醒
 
-AstrBot 插件模板
-
-A template plugin for AstrBot plugin feature
+自用的up直播提醒工具，写着写着逻辑有点乱。有时间整理
 
 # 支持
 
